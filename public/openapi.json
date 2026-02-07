@@ -6,7 +6,6 @@
     "description": "Query and generate podcast transcripts using your Supabase vector database."
   },
   "servers": [
-    { "url": "http://localhost:3000" },
     { "url": "https://podcasts-three.vercel.app" }
   ],
   "components": {
@@ -69,7 +68,10 @@
         "properties": {
           "topic": { "type": "string" },
           "transcript": { "type": "string" },
-          "sources": { "type": "array" },
+          "sources": {
+            "type": "array",
+            "items": { "type": "object" }
+          },
           "saved": { "type": "boolean" },
           "episodeId": { "type": "string" }
         }
