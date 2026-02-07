@@ -1,0 +1,130 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Podcast RAG Studio",
+    "version": "1.0.0",
+    "description": "Query and generate podcast transcripts using your Supabase vector database."
+  },
+  "servers": [
+    { "url": "http://localhost:3000" },
+    { "url": "https://YOUR_DOMAIN" }
+  ],
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    },
+    "schemas": {
+      "QueryRequest": {
+        "type": "object",
+        "required": ["query"],
+        "properties": {
+          "query": { "type": "string" },
+          "topK": { "type": "integer", "default": 5 },
+          "episodeId": { "type": "string" },
+          "speaker": { "type": "string" },
+          "dateFrom": { "type": "string", "format": "date" },
+          "dateTo": { "type": "string", "format": "date" }
+        }
+      },
+      "QueryResponse": {
+        "type": "object",
+        "properties": {
+          "query": { "type": "string" },
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": { "type": "string" },
+                "episode_id": { "type": "string" },
+                "episode_title": { "type": "string" },
+                "content": { "type": "string" },
+                "metadata": { "type": "object" },
+                "similarity": { "type": "number" }
+              }
+            }
+          }
+        }
+      },
+      "GenerateTranscriptRequest": {
+        "type": "object",
+        "required": ["topic"],
+        "properties": {
+          "topic": { "type": "string" },
+          "style": { "type": "string" },
+          "topK": { "type": "integer", "default": 6 },
+          "lengthMinutes": { "type": "number" },
+          "lengthWords": { "type": "number" },
+          "save": { "type": "boolean" },
+          "episodeTitle": { "type": "string" },
+          "episodeId": { "type": "string" },
+          "metadata": { "type": "object" }
+        }
+      },
+      "GenerateTranscriptResponse": {
+        "type": "object",
+        "properties": {
+          "topic": { "type": "string" },
+          "transcript": { "type": "string" },
+          "sources": { "type": "array" },
+          "saved": { "type": "boolean" },
+          "episodeId": { "type": "string" }
+        }
+      }
+    }
+  },
+  "security": [{ "BearerAuth": [] }],
+  "paths": {
+    "/api/query": {
+      "post": {
+        "operationId": "queryTranscriptArchive",
+        "summary": "Query the transcript archive",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/QueryRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Query results",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/QueryResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/generate-transcript": {
+      "post": {
+        "operationId": "generateTranscript",
+        "summary": "Generate a full transcript using RAG",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/GenerateTranscriptRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Generated transcript",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/GenerateTranscriptResponse" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: podcast-embeddings
+    runtime: python
+    plan: free
+    region: oregon
+    buildCommand: pip install -r embeddings_service/requirements.txt
+    startCommand: uvicorn embeddings_service.app:app --host 0.0.0.0 --port ${PORT:-8001}
+    healthCheckPath: /health
+    autoDeploy: true
