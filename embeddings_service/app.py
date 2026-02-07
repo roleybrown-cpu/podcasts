@@ -1,10 +1,10 @@
 from typing import List
 from fastapi import FastAPI
 from pydantic import BaseModel
-from sentence_transformers import SentenceTransformer
+from fastembed import TextEmbedding
 
 MODEL_NAME = "BAAI/bge-small-en-v1.5"
-model = SentenceTransformer(MODEL_NAME)
+model = TextEmbedding(model_name=MODEL_NAME)
 
 app = FastAPI()
 
@@ -17,5 +17,5 @@ def health():
 
 @app.post("/embed")
 def embed(req: EmbedRequest):
-    embeddings = model.encode(req.inputs, normalize_embeddings=True)
-    return {"embeddings": embeddings.tolist()}
+    embeddings = list(model.embed(req.inputs))
+    return {"embeddings": [embedding.tolist() for embedding in embeddings]}
