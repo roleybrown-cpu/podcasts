@@ -27,6 +27,7 @@ Full-stack Next.js app to ingest podcast transcripts into Supabase pgvector and 
 - `POST /api/query` (JSON)
 - `POST /api/generate` (JSON)
 - `POST /api/generate-transcript` (JSON)
+- `GET /api/episode?episodeId=62` (JSON)
 
 ## Notes
 - The UI supports paste text or .txt/.docx upload.

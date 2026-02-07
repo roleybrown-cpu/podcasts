@@ -80,6 +80,56 @@
   },
   "security": [{ "BearerAuth": [] }],
   "paths": {
+    "/api/episode": {
+      "get": {
+        "operationId": "getEpisode",
+        "summary": "Get all chunks for a single episode",
+        "parameters": [
+          {
+            "name": "episodeId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "integer", "default": 200 }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Episode chunks",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "episodeId": { "type": "string" },
+                    "count": { "type": "integer" },
+                    "chunks": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": { "type": "string" },
+                          "episode_id": { "type": "string" },
+                          "episode_title": { "type": "string" },
+                          "chunk_index": { "type": "integer" },
+                          "content": { "type": "string" },
+                          "metadata": { "type": "object" }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/query": {
       "post": {
         "operationId": "queryTranscriptArchive",
